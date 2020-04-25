@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:xlo/blocs/home_bloc.dart';
 import 'package:xlo/common/custom_drawer/custom_drawer.dart';
+import 'package:xlo/models/ad.dart';
 import 'package:xlo/screens/home/widgets/search_dialog.dart';
 import 'package:xlo/screens/home/widgets/top_bar.dart';
+
+import 'widgets/product_tile.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -90,6 +93,24 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: <Widget>[
           TopBar(),
+          Expanded(
+            child: StreamBuilder<List<Ad>>(
+              stream: _homeBloc.outAds,
+              initialData: [],
+              builder: (_, snapshot) {
+                if(snapshot.data == null){
+                  return Container();
+                }
+
+                return ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (_, index) {
+                    return ProductTile(ad: snapshot.data[index]);
+                  },
+                );
+              },
+            ),
+          ),
         ],
       ),
     );
